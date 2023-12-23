@@ -1,0 +1,4 @@
+0 Empty
+1 jus_bottles
+2 paper_cups
+3 plastic_cups
