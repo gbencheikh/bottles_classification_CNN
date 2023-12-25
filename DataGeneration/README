@@ -9,7 +9,6 @@ The captured images are saved to the specified output folder.
 2. Dependencies:
 PIL (Python Imaging Library): Used for working with images.
 cv2 (OpenCV): Used for capturing video frames, image processing, and display.
-cvzone: It seems to be used for computer vision tasks, but it's not explicitly utilized in the provided code.
 os: Used for file and folder operations.
 time: Used for timestamping the captured images.
 
