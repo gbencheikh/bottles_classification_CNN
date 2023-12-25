@@ -64,3 +64,30 @@ The main part of the script initiates a video capture using OpenCV, starts a sep
 3. Adjust PLC settings based on the specific PLC configuration.
 4. Save the pre-trained model and class labels in the sepcified folder.
 5. Run the script and observe the object recognition and PLC integration.
+
+## current state 
+Integrate object recognition with PLC communication
+
+- Connect to Siemens PLC for communication
+- Enhance object recognition and control gates based on results
+- Add thread for asynchronous machine finish detection
+
+fix: Resolve image display issue in main loop
+
+- Ensure proper display of original images in the main loop
+- Fix potential issues affecting image capture
+
+refactor: Improve thread synchronization for PLC communication
+
+- Implement threading lock for safer access to shared data
+- Enhance readability and maintainability of the code
+
+feat: Modify model loading and class labels retrieval
+
+- Load pre-trained model and class labels from specified paths
+- Improve readability and maintainability of the code
+
+docs: Improve documentation for better code understanding
+
+- Add high-level overview of the script and its components
+- Include detailed function comments and usage instructions
