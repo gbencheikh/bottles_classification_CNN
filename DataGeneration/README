@@ -1,6 +1,6 @@
 
 Image Capture and Processing Script Documentation
-This documentation provides an overview of the purpose, dependencies, usage, and recommendations for the provided code.
+This documentation provides an overview of the purpose, dependencies, usage, and recommendations for the code.
 
 1. Purpose:
 The purpose of this script is to capture a generate number of images from the live video feed of a machine camera, only a zoom of the centered rectangular region of interest (ROI) within the frame is captured and saved. 
