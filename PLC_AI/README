@@ -1,1 +1,66 @@
+# Bottles and Cups Recognition System with PLC Integration
 
+## Overview
+
+This Python script integrates Bottles and Cups recognition using a pre-trained TensorFlow model with a Siemens PLC (Programmable Logic Controller). The system captures video frames from a camera, performs real-time object classification, and communicates with the PLC to control the output gates based on the recognition results.
+
+## Dependencies
+
+- `snap7`: Siemens S7-communication library
+- `cv2`: OpenCV for computer vision
+- `numpy`: Numerical computing library
+- `tensorflow`: Machine learning library for object recognition
+- `threading`: Python threading module for parallel execution
+
+## PLC Connection
+
+The script establishes a connection with a Siemens PLC located at the IP address "192.168.1.10". The connection parameters are set, and in case of an error, a connection failure message is displayed.
+
+## PLC Settings
+
+- `db_number4`, `db_number5`, `db_number8`: PLC database numbers for communication
+- `start_address`: Starting address for reading PLC data
+- `byte_to_read`: Number of bytes to read from the PLC
+- `true_val`: Boolean value representing "True" in PLC communication
+- `bytes_True`: Byte representation of the boolean "True"
+- `DB_value`: Variable to store the PLC data read
+
+## Model Loading
+
+The script loads a pre-trained CNN model and its corresponding class labels from files "Model and labels" saved in folder "Model".
+
+## Utility Functions
+
+### `predict(img: numpy.ndarray) -> Tuple[int, float]`
+
+Predicts the class of an input image.
+
+- `img`: Input image to classify
+- Returns a tuple containing the index of the predicted class and the confidence score.
+
+### `show_canvas(img: numpy.ndarray, result_text: str) -> None`
+
+Displays an image with added result text on a canvas.
+
+- `img`: Input image
+- `result_text`: Text to display on the image
+
+### `wait_for_machine_finish() -> None`
+
+Waits until the machine has finished working and the PLC data changes.
+
+## Main Simulation
+
+The main part of the script initiates a video capture using OpenCV, starts a separate thread for waiting for machine finish, and continuously processes video frames. It communicates with the PLC to control output gates based on object recognition results.
+
+### Controls
+
+- Press 'q' to exit the main loop and terminate the script.
+
+## Usage
+
+1. Ensure dependencies are installed.
+2. Set up the PLC connection parameters.
+3. Adjust PLC settings based on the specific PLC configuration.
+4. Save the pre-trained model and class labels in the sepcified folder.
+5. Run the script and observe the object recognition and PLC integration.
