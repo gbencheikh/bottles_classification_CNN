@@ -91,3 +91,18 @@ docs: Improve documentation for better code understanding
 
 - Add high-level overview of the script and its components
 - Include detailed function comments and usage instructions
+
+Modifications: 27/12/2023
+'prediction' function:
+Implemented image resizing and rectangle selection for the zone of interest.
+Conducted predictions specifically on the selected zone.
+Saved the resulting image using a predefined fileName in the "Data_Simulation" folder.
+'show_canvas' function:
+Enhanced the function to display a green rectangle overlay on the image.
+'main' function:
+Extended functionality to predict the output for 10 images.
+Made a decision based on the aggregate results (average and maximum values).
+Saved the corresponding predictions of each image in the 'simulation-results.txt' file.
+Each image has a unique fileName for reference and traceability.
+'simulation_results.txt' file structure:
+The file stores the output of each captured image, allowing for future improvements and analysis. Each entry is associated with a unique fileName for easy correlation with the original image.
