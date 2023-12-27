@@ -1,0 +1,32 @@
+Overview
+This web application allows users to capture an image using their camera through a Python backend powered by Flask. The user interface is created using HTML, and the backend logic is implemented in Python.
+
+Components
+1. Flask Web Application (app.py)
+The Flask application serves as the backend server. It handles HTTP requests, communicates with the camera via a Python script (camera.py), and sends responses back to the user.
+
+Endpoints:
+/ (Root): Renders the main HTML page (index.html).
+/capture_image (GET): Triggers the execution of the camera.py script to capture an image. 
+
+
+2. HTML User Interface (index.html)
+The HTML file defines the structure and user interface of the web page. It includes a button that, when clicked, triggers the image capture process.
+
+JavaScript:
+The included JavaScript code handles the button click event and makes an asynchronous request to the /capture_image endpoint, triggering the execution of the camera.py script.
+
+3. Image Capture Script (camera.py)
+This Python script performs the actual image capture using the computer's camera. It is executed when the /capture_image endpoint is called.
+Please replace this python script by the PLC_AI.py previsously sent.   
+
+Usage
+Run the Flask Application:
+
+python app.py
+Open a web browser and navigate to the adress provided by server. 
+
+Press the "Capture Image" button to trigger the image capture process.
+
+Dependencies
+Flask (Python web framework)
