@@ -8,6 +8,7 @@ from keras.layers import Dense
 from keras.models import Sequential, load_model
 import threading
 import time 
+import os
 "------------------------------------------------------"
 # connection with PLC 
 plc = snap7.client.Client()
@@ -32,7 +33,7 @@ class_names = open("Model/labels.txt", "r").readlines()
 proba = 0.8
 "------------------------------------------------------"
 # utils functions 
-def predict(img):
+def predict(img, fileName):
     """ function to predict the class of an image 
     Input:
         img: input image to classify 
@@ -43,6 +44,27 @@ def predict(img):
     # make a copy of the image 
     image = img.copy()
 
+    # Get the height and width of the image
+    height, width, _ = img.shape
+
+    # Define the dimensions of the rectangle
+    rect_width = int(width * 0.45)
+    rect_height = int(height * 0.9)
+
+    # Calculate the starting point of the rectangle to keep it centered
+    rect_x = (width - rect_width) // 2
+    rect_y = (height - rect_height) // 2
+
+    # Capture the specified rectangle from the image
+    captured_rect = img[rect_y:rect_y + rect_height, rect_x:rect_x + rect_width]
+        
+    # Create the "DataTest" folder if it doesn't exist
+    os.makedirs("Data_Simulation", exist_ok=True)
+
+    # Save the captured image to a file
+    image_filename = os.path.join("Data_Simulation", fileName)
+    cv2.imwrite(image_filename, captured_rect)
+   
     # resize the image to meet prediction model
     resize = tf.image.resize(image, (256,256))
     np.expand_dims(resize, 0)
@@ -57,6 +79,7 @@ def predict(img):
     confidence_score = prediction[0, index]
 
     return index, confidence_score
+
 def show_canvas(img, result_text):
     """Display an image into a frame and add results label.
 
@@ -78,9 +101,21 @@ def show_canvas(img, result_text):
     text_x = (width - text_size[0]) // 2
     text_y = 30
 
+    # Define the dimensions of the rectangle
+    rect_width = int(width * 0.45)
+    rect_height = int(height * 0.9)
+
+    # Calculate the starting point of the rectangle to keep it centered
+    rect_x = (width - rect_width) // 2
+    rect_y = (height - rect_height) // 2
+
+    # Draw the centered rectangle on the frame
+    cv2.rectangle(canvas, (rect_x, rect_y), (rect_x + rect_width, rect_y + rect_height), (0, 255, 0), 2)
+
     # Display the result
     cv2.putText(canvas, result_text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2) 
     cv2.imshow("Image", canvas)
+
 def wait_for_machine_finish():
     """ Wait until the machine has finished working and DB_PLC changed """
     global DB_value
@@ -109,12 +144,33 @@ def main():
     wait_thread.start()
 
     while True:
-        ret, img = cap.read()
-        
-        cv2.imshow("Original Image", img)
+        counter = 0
+        list_index = []
+        list_confidence = []
 
-        index, confidence_score = predict(img)
+        while counter < 10:
+            # Add a small delay to allow OpenCV to update the window
+            cv2.waitKey(1)
+            ret, img = cap.read()
+            cv2.imshow("Original Image", img)
+            
+            fileName = f"image_{time.strftime('%H%M%S')}_{counter}.jpg"
 
+            index, confidence_score = predict(img, fileName)
+
+            # Write results to a file
+            file_name = "simulation_results.txt"
+            with open(file_name, "a") as file:
+                file.write(f"{fileName};{index};{confidence_score}\n")
+
+            counter += 1
+
+            list_index.append(index)
+            list_confidence.append(confidence_score)
+               
+        confidence_score = max(list_confidence)
+        index = list_index[list_confidence.index(confidence_score)]
+                
         if index != 0:
             # if the machine is not empty!
             if confidence_score > proba:
@@ -130,7 +186,10 @@ def main():
             else:
                 # Open Rejected Gate
                 writing = plc.write_area(snap7.types.Areas.DB,db_number5,start_address,bytes_True)
-            
+
+                with file_lock:
+                    value_to_display = DB_value
+                    
                 show_canvas(img, "Unkown object")
 
         # Break the loop if 'q' is pressed
@@ -142,5 +201,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
